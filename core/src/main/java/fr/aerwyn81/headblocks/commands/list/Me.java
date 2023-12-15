@@ -10,6 +10,7 @@ import fr.aerwyn81.headblocks.services.LanguageService;
 import fr.aerwyn81.headblocks.services.PlaceholdersService;
 import fr.aerwyn81.headblocks.services.StorageService;
 import fr.aerwyn81.headblocks.utils.bukkit.LocationUtils;
+import fr.aerwyn81.headblocks.utils.bukkit.PlayerUtils;
 import fr.aerwyn81.headblocks.utils.chat.ChatPageUtils;
 import fr.aerwyn81.headblocks.utils.internal.CommandsUtils;
 import fr.aerwyn81.headblocks.utils.internal.InternalException;
@@ -29,12 +30,12 @@ import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@HBAnnotations(command = "stats", permission = "headblocks.admin", alias = "s")
-public class Stats implements Cmd {
+@HBAnnotations(command = "me", permission = "headblocks.use", alias = "m")
+public class Me implements Cmd {
 
     @Override
     public boolean perform(CommandSender sender, String[] args) {
-        PlayerUuidName playerUuidName = CommandsUtils.extractAndGetPlayerUuidByName(sender, args, true);
+        PlayerUuidName playerUuidName = CommandsUtils.extractAndGetPlayerUuidByName(sender, args, PlayerUtils.hasPermission(sender, "headblocks.commands.progress.other"));
         if (playerUuidName == null) {
             return true;
         }
@@ -74,9 +75,9 @@ public class Stats implements Cmd {
 
         for (int i = cpu.getFirstPos(); i < cpu.getFirstPos() + cpu.getPageHeight() && i < cpu.getSize(); i++) {
             UUID uuid = headsSpawned.get(i).getUuid();
-            Location location = headsSpawned.get(i).getLocation();
+            //Location location = headsSpawned.get(i).getLocation();
 
-            String hover = LocationUtils.parseLocationPlaceholders(LanguageService.getMessage("Chat.LineCoordinate"), location);
+            //String hover = LocationUtils.parseLocationPlaceholders(LanguageService.getMessage("Chat.LineCoordinate"), location);
 
             if (sender instanceof Player) {
                 HeadLocation headLocation = HeadService.getHeadByUUID(uuid);
@@ -86,7 +87,7 @@ public class Stats implements Cmd {
                     HeadName= uuid.toString();
                 }
                 TextComponent msg = new TextComponent(MessageUtils.colorize("&6" + HeadName));
-                msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(hover)));
+                //msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(hover)));
 
                 TextComponent own;
                 if (playerHeads.stream().anyMatch(s -> s.getUuid() == uuid)) {
@@ -97,15 +98,15 @@ public class Stats implements Cmd {
                     own.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(LanguageService.getMessage("Chat.Hover.NotOwn"))));
                 }
 
-                TextComponent tp = new TextComponent(LanguageService.getMessage("Chat.Box.Teleport"));
+                //TextComponent tp = new TextComponent(LanguageService.getMessage("Chat.Box.Teleport"));
 
-                if (location.getWorld() != null) {
-                    tp.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/hb tp " + location.getWorld().getName() + " " + (location.getX() + 0.5) + " " + (location.getY() + 1) + " " + (location.getZ() + 0.5 + " 0.0 90.0")));
-                }
-                tp.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(LanguageService.getMessage("Chat.Hover.Teleport"))));
+                //if (location.getWorld() != null) {
+                //    tp.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/hb tp " + location.getWorld().getName() + " " + (location.getX() + 0.5) + " " + (location.getY() + 1) + " " + (location.getZ() + 0.5 + " 0.0 90.0")));
+                //}
+                //tp.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(LanguageService.getMessage("Chat.Hover.Teleport"))));
 
                 TextComponent space = new TextComponent(" ");
-                cpu.addLine(own, space, tp, space, msg, space);
+                cpu.addLine(own, space, msg, space);
             } else {
                 HeadLocation headLocation = HeadService.getHeadByUUID(uuid);
                 String name = headLocation != null ? headLocation.getName() : "";
@@ -119,7 +120,7 @@ public class Stats implements Cmd {
             }
         }
 
-        cpu.addPageLine("stats " + playerUuidName.getName());
+        cpu.addPageLine("me");
         cpu.build();
         return true;
     }
