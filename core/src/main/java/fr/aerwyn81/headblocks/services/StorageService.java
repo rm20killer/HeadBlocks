@@ -228,6 +228,8 @@ public class StorageService {
 
                     var playerProfile = new PlayerProfileLight(pUuid, playerName, playerDisplayName);
 
+                    var playerHeads = new ArrayList<UUID>();
+
                     if (isExist) {
                         boolean hasRenamed = hasPlayerRenamed(playerProfile);
 
@@ -237,12 +239,13 @@ public class StorageService {
 
                         for (UUID hUuid : database.getHeadsPlayer(pUuid)) {
                             storage.addHead(pUuid, hUuid);
+                            playerHeads.add(hUuid);
                         }
-
-                        _cacheHeads.put(pUuid, new ArrayList<>());
                     } else {
                         updatePlayerName(playerProfile);
                     }
+
+                    _cacheHeads.put(pUuid, playerHeads);
                 } catch (InternalException ex) {
                     storageError = true;
                     HeadBlocks.log.sendMessage(MessageUtils.colorize("&cError while trying to load player " + playerName + " from SQL database: " + ex.getMessage()));
