@@ -82,11 +82,6 @@ public class Me implements Cmd {
                     headLocation = chargedHead.get();
                 }
 
-                var hover = LanguageService.getMessage("Chat.Hover.HeadIsNotOnThisServer");
-
-                if (headLocation != null) {
-                    hover = LocationUtils.parseLocationPlaceholders(LanguageService.getMessage("Chat.LineCoordinate"), headLocation.getLocation());
-                }
 
                 var headName = headLocation != null ? headLocation.getName() : uuid.toString();
                 if (headName.isEmpty()) {
