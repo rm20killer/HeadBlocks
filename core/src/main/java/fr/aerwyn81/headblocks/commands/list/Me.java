@@ -95,7 +95,6 @@ public class Me implements Cmd {
 
                 if (sender instanceof Player) {
                     TextComponent msg = new TextComponent(MessageUtils.colorize("&6" + headName));
-                    msg.setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(hover)));
 
                     TextComponent own;
                     if (playerHeads.stream().anyMatch(s -> s.equals(uuid))) {
