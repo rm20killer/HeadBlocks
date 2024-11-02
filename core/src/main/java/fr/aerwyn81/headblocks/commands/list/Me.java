@@ -120,7 +120,14 @@ public class Me implements Cmd {
                     }
 
                     TextComponent space = new TextComponent(" ");
-                    cpu.addLine(own, space, tp, space, msg, space);
+                    if(PlayerUtils.hasPermission(sender, "headblocks.admin"))
+                    {
+                        cpu.addLine(own, space, tp, space, msg, space);
+                    }
+                    else
+                    {
+                        cpu.addLine(own, space, space, msg, space);
+                    }
                 } else {
                     sender.sendMessage((playerHeads.stream().anyMatch(s -> s.equals(uuid)) ?
                             LanguageService.getMessage("Chat.Box.Own") : LanguageService.getMessage("Chat.Box.NotOwn")) + " " +
